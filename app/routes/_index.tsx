@@ -1,18 +1,29 @@
-import type { MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json } from '@remix-run/node';
+import { Link, useLoaderData } from '@remix-run/react';
+import { getBlogPosts } from '~/utils/blog.server';
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: 'New Remix App' },
-    { name: 'description', content: 'Welcome to Remix!' },
-  ];
+type LoaderData = {
+  posts: Awaited<ReturnType<typeof getBlogPosts>>;
 };
 
-export default function Index() {
+export const loader: LoaderFunction = async () => {
+  const posts = await getBlogPosts();
+  return json({ posts });
+};
+
+export default function BlogIndex() {
+  const { posts } = useLoaderData<LoaderData>();
+
   return (
-    <main>
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-        Tejovanth N
-      </h1>
-    </main>
+    <div>
+      <h1>Blog Posts</h1>
+      <ul>
+        {(posts || []).map(({ frontmatter }) => (
+          <li key={frontmatter.slug}>
+            <Link to={`/post/${frontmatter.slug}`}>{frontmatter.title}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
