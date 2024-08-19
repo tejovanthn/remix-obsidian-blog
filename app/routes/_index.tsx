@@ -1,10 +1,21 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
+import type { SitemapFunction } from 'remix-sitemap';
+import { serverOnly$ } from 'vite-env-only/macros';
 import { getBlogPosts } from '~/utils/blog.server';
 
-type LoaderData = {
-  posts: Awaited<ReturnType<typeof getBlogPosts>>;
-};
+export const sitemap: SitemapFunction = serverOnly$(async () => {
+  const list: { loc: string }[] = [];
+  const pages = await getBlogPosts();
+
+  pages.forEach(({ frontmatter }) => {
+    list.push({
+      loc: `/post/${frontmatter.slug}`,
+    });
+  });
+
+  return list;
+});
 
 export const loader: LoaderFunction = async () => {
   const posts = await getBlogPosts();
@@ -12,7 +23,7 @@ export const loader: LoaderFunction = async () => {
 };
 
 export default function BlogIndex() {
-  const { posts } = useLoaderData<LoaderData>();
+  const { posts } = useLoaderData<typeof loader>();
 
   return (
     <div className="prose dark:prose-invert mx-auto">

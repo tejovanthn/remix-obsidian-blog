@@ -1,16 +1,26 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { redirect, useLoaderData } from '@remix-run/react';
+import type { SitemapFunction } from 'remix-sitemap';
+import { serverOnly$ } from 'vite-env-only/macros';
 import {
-  getBlogPost,
   getEarmarksAndPosts,
   getPage,
   getPages,
   getRedirects,
 } from '~/utils/blog.server';
 
-type LoaderData = {
-  post: Awaited<ReturnType<typeof getBlogPost>>;
-};
+export const sitemap: SitemapFunction = serverOnly$(async () => {
+  const list: { loc: string }[] = [];
+  const pages = await getPages();
+
+  pages.forEach(({ frontmatter }) => {
+    list.push({
+      loc: `/${frontmatter.slug}`,
+    });
+  });
+
+  return list;
+});
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -63,7 +73,7 @@ const Earmarks = ({ earmarks }) => {
 };
 
 export default function BlogPost() {
-  const { page, earmarks } = useLoaderData<LoaderData>();
+  const { page, earmarks } = useLoaderData<typeof loader>();
   return (
     <>
       <article
