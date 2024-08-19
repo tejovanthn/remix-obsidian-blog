@@ -20,7 +20,10 @@ export default function BlogPost() {
 
   return (
     <>
-      <article dangerouslySetInnerHTML={{ __html: page.content }} />
+      <article
+        className="prose dark:prose-invert mx-auto"
+        dangerouslySetInnerHTML={{ __html: page.content }}
+      />
       <script dangerouslySetInnerHTML={{ __html: `hljs.highlightAll()` }} />
     </>
   );

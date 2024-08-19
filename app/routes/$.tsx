@@ -41,10 +41,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 const Earmarks = ({ earmarks }) => {
   if (!earmarks) return null;
   return (
-    <div>
+    <div className="prose dark:prose-invert mx-auto">
       {earmarks.map((earmark) => (
         <div key={earmark.slug}>
-          <h2>{earmark.name}</h2>
+          <h2>
+            {earmark.name} ({earmark.posts.length})
+          </h2>
           <ul>
             {earmark.posts.map((post) => (
               <li key={post.frontmatter.slug}>
@@ -62,10 +64,12 @@ const Earmarks = ({ earmarks }) => {
 
 export default function BlogPost() {
   const { page, earmarks } = useLoaderData<LoaderData>();
-  console.log(earmarks);
   return (
     <>
-      <article dangerouslySetInnerHTML={{ __html: page.content }} />
+      <article
+        className="prose dark:prose-invert mx-auto"
+        dangerouslySetInnerHTML={{ __html: page.content }}
+      />
       <Earmarks earmarks={earmarks} />
     </>
   );

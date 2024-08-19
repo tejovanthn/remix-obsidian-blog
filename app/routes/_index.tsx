@@ -15,7 +15,7 @@ export default function BlogIndex() {
   const { posts } = useLoaderData<LoaderData>();
 
   return (
-    <div>
+    <div className="prose dark:prose-invert mx-auto">
       <h1>Blog Posts</h1>
       <ul>
         {(posts || []).map(({ frontmatter }) => (

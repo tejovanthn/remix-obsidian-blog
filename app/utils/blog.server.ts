@@ -101,7 +101,6 @@ export async function getAllEarmarks(earmark: string) {
 export async function getPostsByEarmark(earmark: string, mark: string) {
   const posts = await getPostList({});
   return posts.filter((post) => {
-    console.log(post?.frontmatter[earmark], mark);
     return (
       post?.frontmatter &&
       post.frontmatter[earmark] &&
@@ -112,14 +111,15 @@ export async function getPostsByEarmark(earmark: string, mark: string) {
 
 export async function getEarmarksAndPosts(earmark: string) {
   const earmarks = await getAllEarmarks(earmark);
-  console.log(earmark);
-  return await Promise.all(
-    earmarks.map(async (mark) => ({
-      name: mark,
-      slug: convert(mark, {
-        camelCase: false,
-      }),
-      posts: await getPostsByEarmark(earmark, mark),
-    })),
-  );
+  return (
+    await Promise.all(
+      earmarks.map(async (mark) => ({
+        name: mark,
+        slug: convert(mark, {
+          camelCase: false,
+        }),
+        posts: await getPostsByEarmark(earmark, mark),
+      })),
+    )
+  ).sort((a, b) => a.name.localeCompare(b.name));
 }
