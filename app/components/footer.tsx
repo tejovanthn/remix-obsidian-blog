@@ -1,4 +1,5 @@
 export function Footer({ pages }) {
+  if (!pages) return null;
   return (
     <footer className="flex justify-center items-center py-4">
       <ul className="flex space-x-8 list-none">

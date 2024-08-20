@@ -6,6 +6,7 @@ import {
   getEarmarksAndPosts,
   getPage,
   getPages,
+  getPostsByEarmark,
   getRedirects,
 } from '~/utils/blog.server';
 
@@ -34,9 +35,19 @@ export const loader: LoaderFunction = async ({ request }) => {
   const pages = await getPages();
   const page = pages.find((p) => p?.frontmatter?.slug === pathname);
 
-  if (['tags', 'sections'].includes(pathname)) {
+  if (['tags', 'sections', 'cards'].includes(pathname)) {
     const earmarks = await getEarmarksAndPosts(pathname);
     const pageContent = await getPage(page.frontmatter.slug);
+    return json({ earmarks, page: pageContent });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [earmark, slug, ...rest] = pathname.split('/');
+  if (['tags', 'sections', 'cards'].includes(earmark) && slug) {
+    const earmarks = [
+      { name: slug, slug, posts: await getPostsByEarmark(earmark, slug) },
+    ];
+    const pageContent = await getPage(slug);
     return json({ earmarks, page: pageContent });
   }
 
@@ -50,6 +61,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 const Earmarks = ({ earmarks }) => {
   if (!earmarks) return null;
+  console.log(earmarks);
   return (
     <div className="prose dark:prose-invert mx-auto">
       {earmarks.map((earmark) => (
@@ -76,10 +88,12 @@ export default function BlogPost() {
   const { page, earmarks } = useLoaderData<typeof loader>();
   return (
     <>
-      <article
-        className="prose dark:prose-invert mx-auto"
-        dangerouslySetInnerHTML={{ __html: page.content }}
-      />
+      {page && page.content ? (
+        <article
+          className="prose dark:prose-invert mx-auto"
+          dangerouslySetInnerHTML={{ __html: page.content }}
+        />
+      ) : null}
       <Earmarks earmarks={earmarks} />
     </>
   );

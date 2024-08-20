@@ -34,6 +34,34 @@ const frontmatter = unified()
   .use(remarkFrontmatter, ['yaml', 'toml'])
   .use(extractFrontmatter, { yaml: parseYaml });
 
+interface CommonFrontmatter {
+  slug: string;
+  title: string;
+  filename: string;
+}
+
+interface PostFrontmatter extends CommonFrontmatter {
+  type: 'post';
+  tags?: string[];
+  sections?: string[];
+  cards?: string[];
+  date?: Date | string;
+}
+
+interface RedirectFrontmatter extends CommonFrontmatter {
+  type: 'redirect';
+  to: string;
+}
+
+interface EarmarkFrontmatter<T> extends CommonFrontmatter {
+  type: T;
+}
+
+type Frontmatter =
+  | PostFrontmatter
+  | RedirectFrontmatter
+  | EarmarkFrontmatter<'tags' | 'sections' | 'cards'>;
+
 const getPostList = async ({ type }: { type?: string }) => {
   const dir = await fs.readdir(postsPath);
   const posts = await Promise.all(
@@ -50,7 +78,7 @@ const getPostList = async ({ type }: { type?: string }) => {
           filename,
           title: filename.replace(/\.md$/, ''),
           ...vfile.data,
-        },
+        } as unknown as Frontmatter,
       };
     }),
   );

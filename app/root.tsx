@@ -70,7 +70,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Header />
         <main className="container min-h-[calc(100vh-10rem)]">{children}</main>
-        <Footer pages={data.pages} />
+        <Footer pages={data?.pages} />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -102,7 +102,7 @@ export function ErrorBoundary() {
       themeAction="/action/set-theme"
     >
       <Layout>
-        <div className="container mx-auto">
+        <div className="container mx-auto prose">
           <h1 className="text-2xl font-bold">
             {isRouteErrorResponse(error)
               ? `${error.status} ${error.statusText}`
