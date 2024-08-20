@@ -16,10 +16,10 @@ import { unified } from 'unified';
 import { convert } from 'url-slug';
 import { parse as parseYaml } from 'yaml';
 
-const postsPath =
-  process.env.NODE_ENV === 'production'
-    ? path.join(process.cwd(), '../..', 'Blog')
-    : path.join(process.cwd(), 'Blog');
+const postsPath = path.join(process.cwd(), 'public', 'Blog')
+  // process.env.NODE_ENV === 'production'
+  //   ? path.join(process.cwd(), 'public', 'Blog')
+  //   : path.join(process.cwd(), 'Blog');
 
 const processor = unified()
   .use(remarkParse)
