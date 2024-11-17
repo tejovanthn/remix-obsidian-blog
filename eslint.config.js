@@ -10,7 +10,7 @@ export default [
       '**/dist/**',
       '.sst/**',
       '.prettier.js',
-      'packages/**/build/**',
+      '**/build/**',
     ],
   },
   {

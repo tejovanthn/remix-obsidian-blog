@@ -63,7 +63,7 @@ const Earmarks = ({ earmarks }) => {
   if (!earmarks) return null;
   console.log(earmarks);
   return (
-    <div className="prose dark:prose-invert mx-auto">
+    <div className="prose prose-slate dark:prose-invert mx-auto">
       {earmarks.map((earmark) => (
         <div key={earmark.slug}>
           <h2>

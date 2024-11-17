@@ -21,10 +21,7 @@ const NavLink = ({
 export const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const navLinks = [
-    { href: '/', label: 'Tejovanth N' },
-    { label: 'mode-toggle', component: <ModeToggle /> },
-  ];
+  const navLinks = [{ label: 'mode-toggle', component: <ModeToggle /> }];
 
   return (
     <nav className="shadow-lg sticky top-0 z-50 bg-background bg-[#365158] mb-4">
